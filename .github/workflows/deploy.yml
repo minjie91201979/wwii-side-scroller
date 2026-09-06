@@ -2,8 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]  # 推送到 main 分支时自动部署
-  workflow_dispatch:    # 允许手动触发
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -25,9 +25,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        # 使用 npm install 而非 npm ci，更兼容 lockfile 可能缺失的情况
+        run: npm install --no-audit --prefer-offline
 
       - name: Build with Vite
         run: npm run build
